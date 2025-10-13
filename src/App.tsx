@@ -14,6 +14,7 @@ import Dashboard from "./pages/Dashboard";
 import Library from "./pages/Library";
 import Canteen from "./pages/Canteen";
 import NotFound from "./pages/NotFound";
+import LibrarianDashboard from "./pages/LibrarianDashboard";
 import { config } from "@/lib/mongodb";
 
 // Use environment configuration
@@ -41,6 +42,7 @@ const App = () => (
               <Route path="/sign-in/*" element={<SignIn />} />
               <Route path="/sign-up/*" element={<SignUp />} />
               <Route path="/dashboard" element={<ProtectedRoute><Layout><Dashboard /></Layout></ProtectedRoute>} />
+              <Route path="/librarian" element={<ProtectedRoute><Layout><LibrarianDashboard /></Layout></ProtectedRoute>} />
               <Route path="/library" element={<ProtectedRoute><Layout><Library /></Layout></ProtectedRoute>} />
               <Route path="/canteen" element={<ProtectedRoute><Layout><Canteen /></Layout></ProtectedRoute>} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
