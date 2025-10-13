@@ -5,7 +5,6 @@ import {
   UtensilsCrossed, 
   GraduationCap, 
   Building2, 
-  Wallet,
   Calendar,
   Bell,
   TrendingUp,
@@ -13,7 +12,6 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@/contexts/ThemeContext';
-import { EnvironmentStatus } from '@/components/EnvironmentStatus';
 import { useUser } from '@clerk/clerk-react'; // ✅ Import Clerk hook
 
 export default function Dashboard() {
@@ -61,7 +59,7 @@ export default function Dashboard() {
   
   const stats = [
     { label: 'Books Issued', value: '3', icon: BookOpen },
-    { label: 'Canteen Balance', value: '₹450', icon: Wallet },
+    { label: 'Assignments Due', value: '2', icon: GraduationCap },
     { label: 'Upcoming Events', value: '5', icon: Calendar },
     { label: 'Reward Points', value: '1,250', icon: Award },
   ];
@@ -124,12 +122,6 @@ export default function Dashboard() {
         </div>
       </div>
       
-      {/* Environment Status */}
-      {import.meta.env.DEV && (
-        <div className="mb-6">
-          <EnvironmentStatus />
-        </div>
-      )}
 
       {/* Recent Activity & Notifications */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

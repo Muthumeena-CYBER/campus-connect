@@ -11,14 +11,17 @@ import {
   CheckCircle2,
   Flame,
   Leaf,
-  Timer
+  Timer,
+  Plus,
+  Minus,
+  X
 } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { toast } from 'sonner';
 
 export default function Canteen() {
   const { theme } = useTheme();
-  const [cart, setCart] = useState<any[]>([]);
+  const [cart, setCart] = useState<{[key: number]: {item: any, quantity: number}}>({});
   
   const menuItems = [
     { 
@@ -93,20 +96,71 @@ export default function Canteen() {
   ];
   
   const addToCart = (item: any) => {
-    setCart([...cart, item]);
-    toast.success(`${item.name} added to cart`);
+    setCart(prevCart => {
+      const newCart = { ...prevCart };
+      if (newCart[item.id]) {
+        newCart[item.id] = {
+          ...newCart[item.id],
+          quantity: newCart[item.id].quantity + 1
+        };
+        toast.success(`${item.name} quantity increased to ${newCart[item.id].quantity}`);
+      } else {
+        newCart[item.id] = {
+          item: item,
+          quantity: 1
+        };
+        toast.success(`${item.name} added to cart`);
+      }
+      return newCart;
+    });
+  };
+
+  const removeFromCart = (itemId: number) => {
+    setCart(prevCart => {
+      const newCart = { ...prevCart };
+      if (newCart[itemId]) {
+        delete newCart[itemId];
+        toast.success('Item removed from cart');
+      }
+      return newCart;
+    });
+  };
+
+  const updateQuantity = (itemId: number, newQuantity: number) => {
+    if (newQuantity <= 0) {
+      removeFromCart(itemId);
+      return;
+    }
+    
+    setCart(prevCart => {
+      const newCart = { ...prevCart };
+      if (newCart[itemId]) {
+        newCart[itemId] = {
+          ...newCart[itemId],
+          quantity: newQuantity
+        };
+      }
+      return newCart;
+    });
   };
   
   const placeOrder = () => {
-    if (cart.length === 0) {
+    const cartItems = Object.values(cart);
+    if (cartItems.length === 0) {
       toast.error('Cart is empty');
       return;
     }
     toast.success('Order placed! Token #43');
-    setCart([]);
+    setCart({});
   };
   
-  const total = cart.reduce((sum, item) => sum + item.price, 0);
+  const total = Object.values(cart).reduce((sum, cartItem) => 
+    sum + (cartItem.item.price * cartItem.quantity), 0
+  );
+  
+  const cartItemCount = Object.values(cart).reduce((sum, cartItem) => 
+    sum + cartItem.quantity, 0
+  );
   
   return (
     <div className="container mx-auto px-4 py-8">
@@ -136,7 +190,7 @@ export default function Canteen() {
         
         <Card className="p-6">
           <UtensilsCrossed className="h-8 w-8 text-orange-500 mb-2" />
-          <p className="font-bold text-2xl">{cart.length}</p>
+          <p className="font-bold text-2xl">{cartItemCount}</p>
           <p className="text-sm text-muted-foreground">Items in Cart</p>
         </Card>
         
@@ -212,20 +266,57 @@ export default function Canteen() {
                 <ShoppingCart className="h-5 w-5" />
                 Your Cart
               </h3>
-              {cart.length > 0 && (
-                <Badge>{cart.length}</Badge>
+              {cartItemCount > 0 && (
+                <Badge>{cartItemCount}</Badge>
               )}
             </div>
             
-            {cart.length === 0 ? (
+            {Object.keys(cart).length === 0 ? (
               <p className="text-center text-muted-foreground py-8">Cart is empty</p>
             ) : (
               <>
                 <div className="space-y-3 mb-4 max-h-60 overflow-y-auto">
-                  {cart.map((item, idx) => (
-                    <div key={idx} className="flex justify-between items-center p-2 bg-muted/50 rounded">
-                      <span className="text-sm">{item.name}</span>
-                      <span className="font-bold">₹{item.price}</span>
+                  {Object.entries(cart).map(([itemId, cartItem]) => (
+                    <div key={itemId} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-sm font-medium">{cartItem.item.name}</span>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => removeFromCart(parseInt(itemId))}
+                            className="h-6 w-6 p-0 text-muted-foreground hover:text-destructive"
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => updateQuantity(parseInt(itemId), cartItem.quantity - 1)}
+                              className="h-6 w-6 p-0"
+                            >
+                              <Minus className="h-3 w-3" />
+                            </Button>
+                            <span className="text-sm font-medium min-w-[2rem] text-center">
+                              {cartItem.quantity}
+                            </span>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => updateQuantity(parseInt(itemId), cartItem.quantity + 1)}
+                              className="h-6 w-6 p-0"
+                            >
+                              <Plus className="h-3 w-3" />
+                            </Button>
+                          </div>
+                          <span className="font-bold text-sm">
+                            ₹{cartItem.item.price * cartItem.quantity}
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>

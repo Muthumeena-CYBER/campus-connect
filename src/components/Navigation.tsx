@@ -46,7 +46,6 @@ export const Navigation = () => {
     { path: '/canteen', label: 'Canteen', icon: UtensilsCrossed },
     { path: '/academic', label: 'Academic', icon: GraduationCap },
     { path: '/campus', label: 'Campus', icon: Building2 },
-    { path: '/wallet', label: 'Wallet', icon: Wallet },
   ];
 
   // Librarian nav items (tab param for active state)
