@@ -26,8 +26,9 @@ export const Navigation = () => {
   const { theme, toggleTheme } = useTheme();
   const { isSignedIn } = useUser();
 
-  // Detect if on librarian dashboard
+  // Detect dashboard type
   const isLibrarian = location.pathname.startsWith('/librarian');
+  const isCanteenIncharge = location.pathname.startsWith('/canteen-incharge');
 
   // Student nav items
   const studentNavItems = [
@@ -47,10 +48,19 @@ export const Navigation = () => {
     { tab: 'fines', label: 'Fines & Dues' },
   ];
 
-  // Get current librarian tab from URL
-  const getLibrarianTab = () => {
+  // Canteen In-charge nav items
+  const canteenNavItems = [
+    { tab: 'menu', label: 'Menu & Inventory' },
+    { tab: 'orders', label: 'Pre-Orders' },
+    { tab: 'transactions', label: 'Transactions' },
+  ];
+
+  // Get current tab from URL
+  const getCurrentTab = () => {
     const params = new URLSearchParams(location.search);
-    return params.get('tab') || 'requests';
+    if (isLibrarian) return params.get('tab') || 'requests';
+    if (isCanteenIncharge) return params.get('tab') || 'menu';
+    return params.get('tab') || '';
   };
 
   const isActive = (path: string) => location.pathname === path || location.pathname.startsWith(path + '/');
@@ -69,7 +79,7 @@ export const Navigation = () => {
 
           {/* Nav Items */}
           <div className="hidden md:flex items-center gap-1 flex-1">
-            {!isLibrarian && studentNavItems.map((item) => {
+            {!isLibrarian && !isCanteenIncharge && studentNavItems.map((item) => {
               const Icon = item.icon;
               return (
                 <Link key={item.path} to={item.path}>
@@ -88,7 +98,21 @@ export const Navigation = () => {
                 {librarianNavItems.map((item) => (
                   <Link key={item.tab} to={`/librarian?tab=${item.tab}`}>
                     <Button
-                      variant={getLibrarianTab() === item.tab ? 'default' : 'ghost'}
+                      variant={getCurrentTab() === item.tab ? 'default' : 'ghost'}
+                      className="gap-2"
+                    >
+                      {item.label}
+                    </Button>
+                  </Link>
+                ))}
+              </>
+            )}
+            {isCanteenIncharge && (
+              <>
+                {canteenNavItems.map((item) => (
+                  <Link key={item.tab} to={`/canteen-incharge?tab=${item.tab}`}>
+                    <Button
+                      variant={getCurrentTab() === item.tab ? 'default' : 'ghost'}
                       className="gap-2"
                     >
                       {item.label}
@@ -133,6 +157,13 @@ export const Navigation = () => {
                   <Link to="/librarian">
                     <span className="flex items-center gap-2">
                       <BookOpen className="h-4 w-4" /> Librarian
+                    </span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/canteen-incharge">
+                    <span className="flex items-center gap-2">
+                      <UtensilsCrossed className="h-4 w-4" /> Canteen In-charge
                     </span>
                   </Link>
                 </DropdownMenuItem>
