@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@/contexts/ThemeContext';
+import { EnvironmentStatus } from '@/components/EnvironmentStatus';
 
 export default function Dashboard() {
   const { theme } = useTheme();
@@ -103,6 +104,13 @@ export default function Dashboard() {
         </div>
       </div>
       
+      {/* Environment Status (Development Only) */}
+      {import.meta.env.DEV && (
+        <div className="mb-6">
+          <EnvironmentStatus />
+        </div>
+      )}
+
       {/* Recent Activity & Notifications */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Activity */}

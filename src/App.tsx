@@ -14,8 +14,10 @@ import Dashboard from "./pages/Dashboard";
 import Library from "./pages/Library";
 import Canteen from "./pages/Canteen";
 import NotFound from "./pages/NotFound";
+import { config } from "@/lib/mongodb";
 
-const CLERK_PUBLISHABLE_KEY = "pk_test_c2F2ZWQtbW9sbHktMTQuY2xlcmsuYWNjb3VudHMuZGV2JA";
+// Use environment configuration
+const CLERK_PUBLISHABLE_KEY = config.clerk.publishableKey;
 
 const queryClient = new QueryClient();
 
