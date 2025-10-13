@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useTheme } from '@/contexts/ThemeContext';
+import { UserButton, useUser } from '@clerk/clerk-react';
 import { 
   BookOpen, 
   UtensilsCrossed, 
@@ -10,12 +11,14 @@ import {
   Settings,
   Sparkles,
   Moon,
-  Sun
+  Sun,
+  LogOut
 } from 'lucide-react';
 
 export const Navigation = () => {
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
+  const { isSignedIn } = useUser();
   
   const navItems = [
     { path: '/dashboard', label: 'Dashboard', icon: GraduationCap },
@@ -58,7 +61,7 @@ export const Navigation = () => {
             })}
           </div>
           
-          {/* Theme Toggle & Settings */}
+          {/* Theme Toggle & User Menu */}
           <div className="flex items-center gap-2">
             <Button 
               variant="ghost" 
@@ -72,11 +75,23 @@ export const Navigation = () => {
                 <Sun className="h-5 w-5" />
               )}
             </Button>
-            <Link to="/settings">
-              <Button variant="ghost" size="icon">
-                <Settings className="h-5 w-5" />
-              </Button>
-            </Link>
+            {isSignedIn && (
+              <>
+                <Link to="/settings">
+                  <Button variant="ghost" size="icon">
+                    <Settings className="h-5 w-5" />
+                  </Button>
+                </Link>
+                <UserButton 
+                  appearance={{
+                    elements: {
+                      avatarBox: "h-10 w-10"
+                    }
+                  }}
+                  afterSignOutUrl="/"
+                />
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -2,7 +2,8 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@/contexts/ThemeContext';
-import { 
+import { useUser } from '@clerk/clerk-react';
+import {
   BookOpen, 
   UtensilsCrossed, 
   GraduationCap, 
@@ -16,6 +17,7 @@ import {
 
 export default function Home() {
   const { theme } = useTheme();
+  const { isSignedIn } = useUser();
   
   const features = [
     {
@@ -74,16 +76,28 @@ export default function Home() {
               Built by students, for students.
             </p>
             
-            <div className="flex gap-4 justify-center">
-              <Link to="/dashboard">
-                <Button size="lg" className="gap-2 shadow-elegant">
-                  Get Started
-                  <ArrowRight className="h-5 w-5" />
-                </Button>
-              </Link>
-              <Button size="lg" variant="outline">
-                Learn More
-              </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              {isSignedIn ? (
+                <Link to="/dashboard">
+                  <Button size="lg" className="gap-2 text-lg">
+                    Go to Dashboard
+                    <Sparkles className="h-5 w-5" />
+                  </Button>
+                </Link>
+              ) : (
+                <>
+                  <Link to="/sign-in">
+                    <Button size="lg" className="gap-2 text-lg">
+                      Sign In
+                    </Button>
+                  </Link>
+                  <Link to="/sign-up">
+                    <Button size="lg" variant="outline" className="text-lg">
+                      Sign Up
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>
