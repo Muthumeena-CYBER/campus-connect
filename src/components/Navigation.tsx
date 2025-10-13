@@ -29,6 +29,15 @@ export const Navigation = () => {
   // Detect dashboard type
   const isLibrarian = location.pathname.startsWith('/librarian');
   const isCanteenIncharge = location.pathname.startsWith('/canteen-incharge');
+  const isFaculty = location.pathname.startsWith('/faculty');
+  // Faculty nav items
+  const facultyNavItems = [
+    { tab: 'resources', label: 'Resources' },
+    { tab: 'tests', label: 'Tests' },
+    { tab: 'groups', label: 'Groups' },
+    { tab: 'forums', label: 'Forums' },
+    { tab: 'performance', label: 'Performance' },
+  ];
 
   // Student nav items
   const studentNavItems = [
@@ -60,6 +69,7 @@ export const Navigation = () => {
     const params = new URLSearchParams(location.search);
     if (isLibrarian) return params.get('tab') || 'requests';
     if (isCanteenIncharge) return params.get('tab') || 'menu';
+    if (isFaculty) return params.get('tab') || 'resources';
     return params.get('tab') || '';
   };
 
@@ -79,7 +89,7 @@ export const Navigation = () => {
 
           {/* Nav Items */}
           <div className="hidden md:flex items-center gap-1 flex-1">
-            {!isLibrarian && !isCanteenIncharge && studentNavItems.map((item) => {
+            {!isLibrarian && !isCanteenIncharge && !isFaculty && studentNavItems.map((item) => {
               const Icon = item.icon;
               return (
                 <Link key={item.path} to={item.path}>
@@ -111,6 +121,20 @@ export const Navigation = () => {
               <>
                 {canteenNavItems.map((item) => (
                   <Link key={item.tab} to={`/canteen-incharge?tab=${item.tab}`}>
+                    <Button
+                      variant={getCurrentTab() === item.tab ? 'default' : 'ghost'}
+                      className="gap-2"
+                    >
+                      {item.label}
+                    </Button>
+                  </Link>
+                ))}
+              </>
+            )}
+            {isFaculty && (
+              <>
+                {facultyNavItems.map((item) => (
+                  <Link key={item.tab} to={`/faculty?tab=${item.tab}`}>
                     <Button
                       variant={getCurrentTab() === item.tab ? 'default' : 'ghost'}
                       className="gap-2"
@@ -164,6 +188,13 @@ export const Navigation = () => {
                   <Link to="/canteen-incharge">
                     <span className="flex items-center gap-2">
                       <UtensilsCrossed className="h-4 w-4" /> Canteen In-charge
+                    </span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/faculty">
+                    <span className="flex items-center gap-2">
+                      <GraduationCap className="h-4 w-4" /> Faculty/Teacher
                     </span>
                   </Link>
                 </DropdownMenuItem>
