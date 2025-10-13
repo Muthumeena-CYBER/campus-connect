@@ -1,8 +1,10 @@
 import { SignUp } from '@clerk/clerk-react';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function SignUpPage() {
   const { theme } = useTheme();
+  const navigate = useNavigate();
   
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
@@ -20,10 +22,9 @@ export default function SignUpPage() {
               card: "shadow-elegant"
             }
           }}
-          routing="path"
-          path="/sign-up"
           signInUrl="/sign-in"
           afterSignUpUrl="/dashboard"
+          redirectUrl="/dashboard"
         />
       </div>
     </div>
