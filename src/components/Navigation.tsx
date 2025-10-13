@@ -2,6 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useTheme } from '@/contexts/ThemeContext';
 import { UserButton, useUser } from '@clerk/clerk-react';
+import { useState } from 'react';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -13,18 +14,19 @@ import {
   UtensilsCrossed, 
   GraduationCap, 
   Building2, 
-  Wallet, 
   Settings,
   Sparkles,
   Moon,
   Sun,
-  LogOut
+  Menu,
+  X
 } from 'lucide-react';
 
 export const Navigation = () => {
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
   const { isSignedIn } = useUser();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Detect dashboard type
   const isLibrarian = location.pathname.startsWith('/librarian');
@@ -79,80 +81,83 @@ export const Navigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 font-bold text-xl">
+          <Link to="/" className="flex items-center gap-3 font-bold text-xl">
             <Sparkles className="h-6 w-6 text-primary" />
             <span className={theme === 'cyber' ? 'gradient-cyber bg-clip-text text-transparent' : ''}>
-              campus connect
+              Campus Connect
             </span>
           </Link>
 
-          {/* Nav Items */}
-          <div className="hidden md:flex items-center gap-1 flex-1">
-            {!isLibrarian && !isCanteenIncharge && !isFaculty && studentNavItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link key={item.path} to={item.path}>
-                  <Button 
-                    variant={isActive(item.path) ? 'default' : 'ghost'}
-                    className="gap-2"
-                  >
-                    <Icon className="h-4 w-4" />
-                    {item.label}
-                  </Button>
-                </Link>
-              );
-            })}
-            {isLibrarian && (
-              <>
-                {librarianNavItems.map((item) => (
-                  <Link key={item.tab} to={`/librarian?tab=${item.tab}`}>
-                    <Button
-                      variant={getCurrentTab() === item.tab ? 'default' : 'ghost'}
-                      className="gap-2"
+          {/* Desktop Nav Items */}
+          <div className="hidden lg:flex items-center justify-center flex-1">
+            <div className="flex items-center gap-2">
+              {!isLibrarian && !isCanteenIncharge && !isFaculty && studentNavItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link key={item.path} to={item.path}>
+                    <Button 
+                      variant={isActive(item.path) ? 'default' : 'ghost'}
+                      className="gap-2 px-4 py-2 h-10"
                     >
+                      <Icon className="h-4 w-4" />
                       {item.label}
                     </Button>
                   </Link>
-                ))}
-              </>
-            )}
-            {isCanteenIncharge && (
-              <>
-                {canteenNavItems.map((item) => (
-                  <Link key={item.tab} to={`/canteen-incharge?tab=${item.tab}`}>
-                    <Button
-                      variant={getCurrentTab() === item.tab ? 'default' : 'ghost'}
-                      className="gap-2"
-                    >
-                      {item.label}
-                    </Button>
-                  </Link>
-                ))}
-              </>
-            )}
-            {isFaculty && (
-              <>
-                {facultyNavItems.map((item) => (
-                  <Link key={item.tab} to={`/faculty?tab=${item.tab}`}>
-                    <Button
-                      variant={getCurrentTab() === item.tab ? 'default' : 'ghost'}
-                      className="gap-2"
-                    >
-                      {item.label}
-                    </Button>
-                  </Link>
-                ))}
-              </>
-            )}
+                );
+              })}
+              {isLibrarian && (
+                <>
+                  {librarianNavItems.map((item) => (
+                    <Link key={item.tab} to={`/librarian?tab=${item.tab}`}>
+                      <Button
+                        variant={getCurrentTab() === item.tab ? 'default' : 'ghost'}
+                        className="gap-2 px-4 py-2 h-10"
+                      >
+                        {item.label}
+                      </Button>
+                    </Link>
+                  ))}
+                </>
+              )}
+              {isCanteenIncharge && (
+                <>
+                  {canteenNavItems.map((item) => (
+                    <Link key={item.tab} to={`/canteen-incharge?tab=${item.tab}`}>
+                      <Button
+                        variant={getCurrentTab() === item.tab ? 'default' : 'ghost'}
+                        className="gap-2 px-4 py-2 h-10"
+                      >
+                        {item.label}
+                      </Button>
+                    </Link>
+                  ))}
+                </>
+              )}
+              {isFaculty && (
+                <>
+                  {facultyNavItems.map((item) => (
+                    <Link key={item.tab} to={`/faculty?tab=${item.tab}`}>
+                      <Button
+                        variant={getCurrentTab() === item.tab ? 'default' : 'ghost'}
+                        className="gap-2 px-4 py-2 h-10"
+                      >
+                        {item.label}
+                      </Button>
+                    </Link>
+                  ))}
+                </>
+              )}
+            </div>
           </div>
           
-          {/* Theme Toggle, Dashboard Dropdown & User Menu */}
-          <div className="flex items-center gap-2">
+          {/* Right Side Actions */}
+          <div className="flex items-center gap-3">
+            {/* Theme Toggle */}
             <Button 
               variant="ghost" 
               size="icon"
               onClick={toggleTheme}
-              className="transition-smooth"
+              className="transition-smooth h-10 w-10"
             >
               {theme === 'classic' ? (
                 <Moon className="h-5 w-5" />
@@ -160,12 +165,13 @@ export const Navigation = () => {
                 <Sun className="h-5 w-5" />
               )}
             </Button>
+
             {/* Dashboard Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="gap-2">
+                <Button variant="ghost" className="gap-2 px-4 py-2 h-10">
                   <GraduationCap className="h-4 w-4" />
-                  Dashboards
+                  <span className="hidden sm:inline">Dashboards</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -193,16 +199,18 @@ export const Navigation = () => {
                 <DropdownMenuItem asChild>
                   <Link to="/faculty">
                     <span className="flex items-center gap-2">
-                      <GraduationCap className="h-4 w-4" /> Faculty/Teacher
+                      <GraduationCap className="h-4 w-4" /> Faculty
                     </span>
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+
+            {/* User Actions */}
             {isSignedIn && (
               <>
                 <Link to="/settings">
-                  <Button variant="ghost" size="icon">
+                  <Button variant="ghost" size="icon" className="h-10 w-10">
                     <Settings className="h-5 w-5" />
                   </Button>
                 </Link>
@@ -216,8 +224,86 @@ export const Navigation = () => {
                 />
               </>
             )}
+
+            {/* Mobile Menu Button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="lg:hidden h-10 w-10"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? (
+                <X className="h-5 w-5" />
+              ) : (
+                <Menu className="h-5 w-5" />
+              )}
+            </Button>
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className="lg:hidden border-t border-border/50 bg-background/95 backdrop-blur-md">
+            <div className="py-4 space-y-2">
+              {!isLibrarian && !isCanteenIncharge && !isFaculty && studentNavItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link key={item.path} to={item.path} onClick={() => setIsMobileMenuOpen(false)}>
+                    <Button 
+                      variant={isActive(item.path) ? 'default' : 'ghost'}
+                      className="w-full justify-start gap-3 h-12"
+                    >
+                      <Icon className="h-5 w-5" />
+                      {item.label}
+                    </Button>
+                  </Link>
+                );
+              })}
+              {isLibrarian && (
+                <>
+                  {librarianNavItems.map((item) => (
+                    <Link key={item.tab} to={`/librarian?tab=${item.tab}`} onClick={() => setIsMobileMenuOpen(false)}>
+                      <Button
+                        variant={getCurrentTab() === item.tab ? 'default' : 'ghost'}
+                        className="w-full justify-start gap-3 h-12"
+                      >
+                        {item.label}
+                      </Button>
+                    </Link>
+                  ))}
+                </>
+              )}
+              {isCanteenIncharge && (
+                <>
+                  {canteenNavItems.map((item) => (
+                    <Link key={item.tab} to={`/canteen-incharge?tab=${item.tab}`} onClick={() => setIsMobileMenuOpen(false)}>
+                      <Button
+                        variant={getCurrentTab() === item.tab ? 'default' : 'ghost'}
+                        className="w-full justify-start gap-3 h-12"
+                      >
+                        {item.label}
+                      </Button>
+                    </Link>
+                  ))}
+                </>
+              )}
+              {isFaculty && (
+                <>
+                  {facultyNavItems.map((item) => (
+                    <Link key={item.tab} to={`/faculty?tab=${item.tab}`} onClick={() => setIsMobileMenuOpen(false)}>
+                      <Button
+                        variant={getCurrentTab() === item.tab ? 'default' : 'ghost'}
+                        className="w-full justify-start gap-3 h-12"
+                      >
+                        {item.label}
+                      </Button>
+                    </Link>
+                  ))}
+                </>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );

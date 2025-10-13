@@ -171,7 +171,7 @@ export default function Canteen() {
             Canteen Pre-Order
           </span>
         </h1>
-        <p className="text-muted-foreground">Skip the queue, order ahead!</p>
+        <p className="text-muted-foreground mb-6">Skip the queue, order ahead!</p>
       </div>
       
       {/* Stats */}

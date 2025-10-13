@@ -193,7 +193,7 @@ export default function Academic() {
             Academic Hub
           </span>
         </h1>
-        <p className="text-muted-foreground">Access study materials, assignments, and collaborate with peers</p>
+        <p className="text-muted-foreground mb-6">Access study materials, assignments, and collaborate with peers</p>
       </div>
 
       {/* Search Bar */}

@@ -263,7 +263,7 @@ export default function Campus() {
             Campus Services
           </span>
         </h1>
-        <p className="text-muted-foreground">Explore events, services, and facilities across campus</p>
+        <p className="text-muted-foreground mb-6">Explore events, services, and facilities across campus</p>
       </div>
 
       {/* Search Bar */}

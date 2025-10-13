@@ -60,7 +60,15 @@ export default function LibrarianDashboard() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-6 text-neon-blue">Librarian Dashboard</h1>
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-4xl font-bold mb-2">
+          <span className={theme === 'cyber' ? 'gradient-cyber bg-clip-text text-transparent' : ''}>
+            Librarian Dashboard
+          </span>
+        </h1>
+        <p className="text-muted-foreground mb-6">Manage book requests, inventory, and library operations</p>
+      </div>
       {/* Render only the selected tab's content */}
       {tab === 'requests' && (
         <Card>

@@ -55,13 +55,14 @@ export default function Library() {
   
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Header with Search */}
+      {/* Header */}
       <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-4">
+        <h1 className="text-4xl font-bold mb-2">
           <span className={theme === 'cyber' ? 'gradient-cyber bg-clip-text text-transparent' : ''}>
             Library Management
           </span>
         </h1>
+        <p className="text-muted-foreground mb-6">Browse, issue, and return books with QR codes</p>
         
         <div className="flex gap-3 max-w-2xl">
           <div className="flex-1 relative">

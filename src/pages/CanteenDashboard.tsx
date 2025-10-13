@@ -81,7 +81,15 @@ export default function CanteenDashboard() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-6 text-neon-blue">Canteen In-charge Dashboard</h1>
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-4xl font-bold mb-2">
+          <span className={theme === 'cyber' ? 'gradient-cyber bg-clip-text text-transparent' : ''}>
+            Canteen Dashboard
+          </span>
+        </h1>
+        <p className="text-muted-foreground mb-6">Manage menu, orders, and canteen operations</p>
+      </div>
       
       {/* Menu & Inventory Control */}
       {tab === 'menu' && (
