@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useChatbot } from '@/contexts/ChatbotContext';
 import { UserButton, useUser } from '@clerk/clerk-react';
 import { useState } from 'react';
 import {
@@ -19,12 +20,14 @@ import {
   Moon,
   Sun,
   Menu,
-  X
+  X,
+  MessageCircle
 } from 'lucide-react';
 
 export const Navigation = () => {
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
+  const { openChatbot } = useChatbot();
   const { isSignedIn } = useUser();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -152,6 +155,19 @@ export const Navigation = () => {
           
           {/* Right Side Actions */}
           <div className="flex items-center gap-3">
+            {/* Chat Assistant Button */}
+            {isSignedIn && (
+              <Button 
+                variant="ghost" 
+                size="icon"
+                onClick={openChatbot}
+                className="transition-smooth h-10 w-10"
+                title="Open AI Assistant"
+              >
+                <MessageCircle className="h-5 w-5" />
+              </Button>
+            )}
+
             {/* Theme Toggle */}
             <Button 
               variant="ghost" 

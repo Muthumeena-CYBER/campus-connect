@@ -50,9 +50,13 @@ export const config = {
   mongodb: {
     uri: MONGODB_URI,
   },
-  // Add other environment variables here
   clerk: {
     publishableKey: import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || "pk_test_c2F2ZWQtbW9sbHktMTQuY2xlcmsuYWNjb3VudHMuZGV2JA",
+  },
+  openai: {
+    apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+    model: import.meta.env.VITE_OPENAI_MODEL || "gpt-3.5-turbo",
+    enabled: !!import.meta.env.VITE_OPENAI_API_KEY,
   }
 };
 

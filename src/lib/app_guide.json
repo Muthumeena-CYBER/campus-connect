@@ -1,0 +1,227 @@
+{
+  "app_name": "Campus Connect",
+  "description": "A comprehensive campus management system that streamlines academic and administrative processes for students, faculty, and staff.",
+  "modules": {
+    "Dashboard": {
+      "description": "Central hub showing personalized overview of campus activities, quick stats, and recent activity",
+      "features": ["Activity overview", "Quick actions", "Notifications", "Statistics", "Recent updates"],
+      "access_roles": ["Student", "Professor", "Librarian", "Canteen Staff", "Admin"]
+    },
+    "Library": {
+      "description": "Digital library management system with QR code integration for seamless book operations",
+      "features": [
+        "Book catalog browsing",
+        "QR code scanning for issue/return",
+        "Due date tracking",
+        "Fine management",
+        "Book reservations",
+        "Popular books section",
+        "Search and filtering"
+      ],
+      "access_roles": ["Student", "Librarian", "Admin"],
+      "student_features": ["Browse books", "Issue books", "Return books", "Check due dates", "Pay fines", "Reserve books"],
+      "librarian_features": ["Manage inventory", "Process returns", "Track fines", "Update book status", "Generate reports"]
+    },
+    "Canteen": {
+      "description": "Pre-ordering system that eliminates queues and streamlines meal service",
+      "features": [
+        "Digital menu with real-time availability",
+        "Pre-ordering system",
+        "Order tracking",
+        "Payment integration",
+        "Inventory management",
+        "Sales analytics"
+      ],
+      "access_roles": ["Student", "Canteen Staff", "Admin"],
+      "student_features": ["View menu", "Pre-order meals", "Track orders", "Payment options", "Order history"],
+      "staff_features": ["Update menu", "Manage inventory", "Process orders", "Track payments", "Generate reports"]
+    },
+    "Academic": {
+      "description": "Comprehensive academic hub for study materials, assignments, and collaboration",
+      "features": [
+        "Study materials repository",
+        "Assignment submission",
+        "Study groups",
+        "Academic forums",
+        "Resource sharing",
+        "Progress tracking"
+      ],
+      "access_roles": ["Student", "Professor", "Admin"],
+      "student_features": ["Download materials", "Submit assignments", "Join study groups", "Participate in forums", "Track progress"],
+      "professor_features": ["Upload materials", "Create assignments", "Manage study groups", "Moderate forums", "Grade submissions"]
+    },
+    "Campus": {
+      "description": "Campus services and facilities management system",
+      "features": [
+        "Event management",
+        "Facility booking",
+        "Service directory",
+        "Announcements",
+        "Campus map integration",
+        "Service ratings"
+      ],
+      "access_roles": ["Student", "Professor", "Staff", "Admin"],
+      "features_list": ["Register for events", "Book facilities", "View announcements", "Contact services", "Rate services"]
+    },
+    "Authentication": {
+      "description": "Secure user authentication and role-based access control",
+      "features": ["Clerk integration", "Role-based permissions", "Secure sessions", "User profiles"],
+      "access_roles": ["All users"]
+    }
+  },
+  "roles": {
+    "Student": {
+      "description": "Primary users with access to academic and campus services",
+      "permissions": [
+        "Access library services",
+        "Pre-order from canteen",
+        "Download study materials",
+        "Submit assignments",
+        "Join study groups",
+        "Register for events",
+        "Book campus facilities",
+        "Participate in forums"
+      ],
+      "dashboard_features": ["Activity overview", "Quick actions", "Notifications", "Personal stats"]
+    },
+    "Professor": {
+      "description": "Faculty members with academic management capabilities",
+      "permissions": [
+        "Upload study materials",
+        "Create and grade assignments",
+        "Manage study groups",
+        "Moderate academic forums",
+        "Access faculty dashboard",
+        "View student progress"
+      ],
+      "dashboard_features": ["Resource management", "Student analytics", "Assignment tracking", "Forum moderation"]
+    },
+    "Librarian": {
+      "description": "Library staff managing book operations and inventory",
+      "permissions": [
+        "Manage book inventory",
+        "Process book issues and returns",
+        "Track due dates and fines",
+        "Generate library reports",
+        "Update book availability",
+        "Handle QR code operations"
+      ],
+      "dashboard_features": ["Inventory management", "Loan tracking", "Fine management", "Library analytics"]
+    },
+    "Canteen Staff": {
+      "description": "Canteen personnel managing food service operations",
+      "permissions": [
+        "Update menu items",
+        "Manage inventory",
+        "Process pre-orders",
+        "Track payments",
+        "Generate sales reports",
+        "Update item availability"
+      ],
+      "dashboard_features": ["Menu management", "Order processing", "Payment tracking", "Sales analytics"]
+    },
+    "Admin": {
+      "description": "System administrators with full access to all modules",
+      "permissions": [
+        "Full system access",
+        "User management",
+        "System configuration",
+        "Analytics and reports",
+        "Data management",
+        "Role assignments"
+      ],
+      "dashboard_features": ["System overview", "User management", "Analytics", "Configuration"]
+    }
+  },
+  "workflows": {
+    "Library_Issue_Process": [
+      "Student browses book catalog",
+      "Student scans QR code or selects book",
+      "System checks availability and student eligibility",
+      "Book is issued with due date",
+      "Student receives confirmation"
+    ],
+    "Library_Return_Process": [
+      "Student scans QR code on book",
+      "System identifies book and student",
+      "System calculates any fines",
+      "Book is returned and availability updated",
+      "Fine payment processed if applicable"
+    ],
+    "Canteen_PreOrder_Process": [
+      "Student views available menu",
+      "Student selects items and quantities",
+      "Student places pre-order",
+      "Canteen staff receives order notification",
+      "Staff prepares order and marks as ready",
+      "Student picks up order and confirms"
+    ],
+    "Academic_Assignment_Process": [
+      "Professor uploads assignment details",
+      "Students receive notification",
+      "Students download materials and work on assignment",
+      "Students submit completed assignment",
+      "Professor grades and provides feedback"
+    ],
+    "Campus_Event_Registration": [
+      "Admin creates event with details",
+      "Event appears in campus events section",
+      "Students view event information",
+      "Students register for event",
+      "System tracks registrations and capacity"
+    ]
+  },
+  "features": {
+    "QR_Code_Integration": "Books and students have QR codes for quick scanning and identification",
+    "Real_Time_Updates": "All modules provide real-time status updates and notifications",
+    "Theme_Support": "Dual theme system (Classic and Cyber) for personalized experience",
+    "Mobile_Responsive": "Fully responsive design optimized for all devices",
+    "Payment_Integration": "Digital payment support for fines and canteen orders",
+    "Analytics": "Comprehensive analytics and reporting across all modules",
+    "Search_Functionality": "Advanced search and filtering across all content types",
+    "Notification_System": "Smart notifications based on user role and activity"
+  },
+  "common_queries": {
+    "library": [
+      "How do I borrow a book?",
+      "How do I return a book?",
+      "How do I check my due dates?",
+      "How do I pay library fines?",
+      "How do I reserve a book?"
+    ],
+    "canteen": [
+      "How do I pre-order food?",
+      "How do I check my order status?",
+      "What payment methods are accepted?",
+      "How do I view the menu?",
+      "How do I track my order history?"
+    ],
+    "academic": [
+      "How do I download study materials?",
+      "How do I submit assignments?",
+      "How do I join study groups?",
+      "How do I participate in forums?",
+      "How do I track my academic progress?"
+    ],
+    "campus": [
+      "How do I register for events?",
+      "How do I book campus facilities?",
+      "How do I view announcements?",
+      "How do I contact campus services?",
+      "How do I rate services?"
+    ],
+    "general": [
+      "How do I change my theme?",
+      "How do I update my profile?",
+      "How do I get help?",
+      "How do I report issues?",
+      "What are my permissions?"
+    ]
+  },
+  "help_topics": {
+    "getting_started": "New users should start with the Dashboard to understand their role and available features",
+    "troubleshooting": "Common issues include QR code scanning problems, payment failures, and login issues",
+    "best_practices": "Regularly check notifications, keep track of due dates, and use pre-ordering for canteen",
+    "support": "For technical support, contact the IT department or use the help section in the app"
+  }
+}

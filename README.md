@@ -9,6 +9,7 @@ A comprehensive campus management system built with React, TypeScript, and moder
 - **Canteen Pre-Ordering**: Digital menu, shopping cart, order tracking
 - **Academic Hub**: Study materials, assignments, study groups, forums
 - **Campus Services**: Events, facilities booking, announcements
+- **AI Chatbot**: Intelligent assistant for campus services and support
 - **Authentication**: Secure user authentication with Clerk
 - **Responsive Design**: Mobile-first approach with dual themes
 
@@ -43,10 +44,11 @@ npm install
 ```
 
 3. Set up environment variables:
-Create a `.env` file in the root directory:
+Create a `.env.local` file in the root directory:
 ```env
 VITE_MONGODB_URI=your_mongodb_connection_string
 VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+VITE_OPENAI_API_KEY=your_openai_api_key_here
 ```
 
 4. Start the development server:
@@ -55,6 +57,29 @@ npm run dev
 ```
 
 The application will be available at `http://localhost:8080`
+
+## AI Chatbot
+
+The application includes an intelligent AI chatbot that can help users with:
+- Library services and book management
+- Canteen pre-ordering system
+- Academic resources and study materials
+- Campus events and facilities
+- General campus information
+
+### Chatbot Features
+- **Smart Responses**: Context-aware responses about campus services
+- **Dual Theme Support**: Integrates with both Classic and Cyber themes
+- **Real-time Chat**: Instant messaging interface with typing indicators
+- **Floating Interface**: Always accessible floating chat button
+- **Mock & Real AI**: Works with both mock responses and real OpenAI API
+
+### Setup
+1. **Optional**: Add your OpenAI API key to `.env.local` for real AI responses
+2. **Default**: The chatbot works with intelligent mock responses without any API key
+3. **Access**: Click the chat button in the navigation or the floating chat button
+
+For detailed chatbot setup instructions, see [CHATBOT_SETUP.md](./CHATBOT_SETUP.md)
 
 ## Available Scripts
 
