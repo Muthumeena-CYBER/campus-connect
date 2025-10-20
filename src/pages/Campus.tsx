@@ -27,10 +27,13 @@ import {
 } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { toast } from 'sonner';
+import { FacilityBookingDialog } from '@/components/FacilityBookingDialog';
+import type { Facility, FacilityBooking, BookingRequest } from '@/types/facility';
 
 export default function Campus() {
   const { theme } = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
+  const [facilityBookings, setFacilityBookings] = useState<FacilityBooking[]>([]);
   
   // Campus Events
   const events = [
@@ -155,46 +158,39 @@ export default function Campus() {
   ];
 
   // Campus Facilities
-  const facilities = [
+  const facilities: Facility[] = [
     { 
-      id: 1,
-      name: 'Computer Lab', 
+      id: 'lab-1',
+      name: 'Computer Lab A', 
+      type: 'laboratory',
       building: 'Tech Building',
       floor: '2nd Floor',
       capacity: 50,
-      available: true,
-      equipment: 'High-end PCs, Projectors',
+      equipment: ['High-end PCs', 'Projector', 'Whiteboard'],
+      amenities: ['WiFi', 'Power Outlets'],
       hours: '8:00 AM - 10:00 PM'
     },
     { 
-      id: 2,
-      name: 'Conference Room A', 
+      id: 'hall-1',
+      name: 'Seminar Hall 1', 
+      type: 'seminar-hall',
       building: 'Admin Building',
       floor: '3rd Floor',
-      capacity: 20,
-      available: false,
-      equipment: 'Projector, Whiteboard, Video Conferencing',
+      capacity: 80,
+      equipment: ['Projector', 'Sound System', 'Microphone'],
+      amenities: ['WiFi', 'Air Conditioning'],
       hours: '9:00 AM - 6:00 PM'
     },
     { 
-      id: 3,
-      name: 'Gymnasium', 
-      building: 'Sports Complex',
-      floor: 'Ground Floor',
-      capacity: 100,
-      available: true,
-      equipment: 'Cardio Machines, Weights, Locker Rooms',
-      hours: '6:00 AM - 11:00 PM'
-    },
-    { 
-      id: 4,
-      name: 'Study Hall', 
-      building: 'Library Building',
-      floor: '1st Floor',
-      capacity: 200,
-      available: true,
-      equipment: 'Individual Study Carrels, Group Study Rooms',
-      hours: '24/7'
+      id: 'conf-1',
+      name: 'Conference Room B', 
+      type: 'conference-room',
+      building: 'Admin Building',
+      floor: '2nd Floor',
+      capacity: 20,
+      equipment: ['Projector', 'Whiteboard', 'Video Conferencing'],
+      amenities: ['WiFi'],
+      hours: '9:00 AM - 6:00 PM'
     },
   ];
 
@@ -246,8 +242,45 @@ export default function Campus() {
     toast.success(`Contacting ${service.name}...`);
   };
 
-  const bookFacility = (facility: any) => {
-    toast.success(`Booking request sent for ${facility.name}`);
+  // Availability check (prevents overlapping bookings)
+  const isFacilityAvailable = (facilityId: string, date: string, startTime: string, endTime: string) => {
+    return facilityBookings.every(b => {
+      if (b.facilityId !== facilityId || b.date !== date || b.status === 'cancelled') return true;
+      const overlaps = (startTime < b.endTime) && (endTime > b.startTime);
+      return !overlaps;
+    });
+  };
+
+  const handleFacilityBooking = (bookingRequest: BookingRequest) => {
+    const facility = facilities.find(f => f.id === bookingRequest.facilityId);
+    if (!facility) {
+      toast.error('Facility not found');
+      return;
+    }
+    if (!isFacilityAvailable(bookingRequest.facilityId, bookingRequest.date, bookingRequest.startTime, bookingRequest.endTime)) {
+      toast.error('Time slot already booked. Choose a different time.');
+      return;
+    }
+    const newBooking: FacilityBooking = {
+      id: crypto.randomUUID(),
+      facilityId: facility.id,
+      facilityName: facility.name,
+      bookedBy: 'current-user',
+      bookedByName: 'Staff Member',
+      purpose: bookingRequest.purpose,
+      eventType: bookingRequest.eventType,
+      startTime: bookingRequest.startTime,
+      endTime: bookingRequest.endTime,
+      date: bookingRequest.date,
+      attendees: bookingRequest.attendees,
+      status: 'confirmed',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      notes: bookingRequest.notes,
+      equipmentRequested: bookingRequest.equipmentRequested
+    };
+    setFacilityBookings(prev => [newBooking, ...prev]);
+    toast.success(`Booked ${facility.name} on ${bookingRequest.date}`);
   };
 
   const markAsRead = (announcement: any) => {
@@ -453,54 +486,62 @@ export default function Campus() {
         <TabsContent value="facilities">
           <Card className="p-6">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold">Campus Facilities</h2>
-              <Button className="gap-2">
-                <MapPin className="h-4 w-4" />
-                Campus Map
-              </Button>
+              <h2 className="text-2xl font-bold">Smart Facility Booking</h2>
+              <Badge variant="outline">{facilityBookings.length} Active Bookings</Badge>
             </div>
-            
-            <div className="space-y-4">
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {facilities.map((facility) => (
-                <Card key={facility.id} className="p-4">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="font-bold">{facility.name}</h3>
-                        <Badge variant={facility.available ? 'default' : 'destructive'}>
-                          {facility.available ? 'Available' : 'Occupied'}
-                        </Badge>
-                        <Badge variant="outline">Capacity: {facility.capacity}</Badge>
-                      </div>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-muted-foreground mb-3">
-                        <div>
-                          <span className="font-medium">Building:</span> {facility.building}
-                        </div>
-                        <div>
-                          <span className="font-medium">Floor:</span> {facility.floor}
-                        </div>
-                        <div>
-                          <span className="font-medium">Hours:</span> {facility.hours}
-                        </div>
-                      </div>
-                      
-                      <p className="text-sm text-muted-foreground">
-                        <span className="font-medium">Equipment:</span> {facility.equipment}
-                      </p>
+                <Card key={facility.id} className="p-4 hover:shadow-card transition-smooth">
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <h3 className="font-bold">{facility.name}</h3>
+                      <div className="text-xs text-muted-foreground">{facility.building}, {facility.floor}</div>
                     </div>
-                    
-                    <Button 
-                      size="sm" 
-                      onClick={() => bookFacility(facility)}
-                      disabled={!facility.available}
-                    >
-                      {facility.available ? 'Book Now' : 'Unavailable'}
-                    </Button>
+                    <Badge variant="outline">Capacity: {facility.capacity}</Badge>
                   </div>
+
+                  <div className="space-y-2 text-sm mb-4 text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                      <MapPin className="h-4 w-4" />
+                      <span>{facility.hours}</span>
+                    </div>
+                  </div>
+
+                  <div className="mb-4 flex flex-wrap gap-1">
+                    {facility.equipment.slice(0,3).map(eq => (
+                      <Badge key={eq} variant="outline" className="text-xs">{eq}</Badge>
+                    ))}
+                    {facility.equipment.length > 3 && (
+                      <Badge variant="outline" className="text-xs">+{facility.equipment.length - 3} more</Badge>
+                    )}
+                  </div>
+
+                  <FacilityBookingDialog
+                    facility={facility}
+                    onBookingSubmit={handleFacilityBooking}
+                  />
                 </Card>
               ))}
             </div>
+
+            {facilityBookings.length > 0 && (
+              <div className="mt-8">
+                <h3 className="text-lg font-semibold mb-3">Recent Bookings</h3>
+                <div className="space-y-2">
+                  {facilityBookings.slice(0,5).map(b => (
+                    <Card key={b.id} className="p-3 text-sm flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <MapPin className="h-4 w-4 text-muted-foreground" />
+                        <span className="font-medium">{b.facilityName}</span>
+                        <Badge variant="outline" className="capitalize">{b.eventType}</Badge>
+                      </div>
+                      <div className="text-muted-foreground">{b.date} • {b.startTime}-{b.endTime}</div>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            )}
           </Card>
         </TabsContent>
 
